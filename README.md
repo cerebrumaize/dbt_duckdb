@@ -1,10 +1,14 @@
-Welcome to your new dbt project!
+My first dbt/duck_db project!
+## Config
+- a venv
+- pip3 install dbt-core dbt-duckdb duckdb
 
 ### Using the starter project
 
 Try running the following commands:
-- dbt run
-- dbt test
+- dbt init # start a dbt project
+- dbt debug # test connection using yml 
+- dbt test # test dbt integrity
 
 
 ### Resources:
