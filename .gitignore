@@ -1,0 +1,8 @@
+.DS_Store
+target/
+dbt_packages/
+logs/
+
+# Data directory
+data/
+taxi_rides_ny.duckdb
