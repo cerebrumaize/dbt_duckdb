@@ -1,4 +1,5 @@
 .DS_Store
+package-lock.yml
 target/
 dbt_packages/
 logs/
@@ -6,3 +7,4 @@ logs/
 # Data directory
 data/
 taxi_rides_ny.duckdb
+seeds/
