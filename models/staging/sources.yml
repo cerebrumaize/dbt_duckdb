@@ -7,6 +7,20 @@ sources:
     schema: prod
     tables:
       - name: yellow_tripdata
+        description: cab can be street hailed and pre-arranged anywhere in NYC.
+        colmns:
+          - name: VendorID
+            description: |
+              which taxi company this one is working on
+                1: 'Creative Mobile Technologies'
+                2: 'VeriFone Inc.'
+                4: 'Unknown/Other'
+            data_type: int
+            meta:
+              pii: false
+              ownership: data_team
+              importance: high
+              formatting: 10-digits
       - name: green_tripdata
 
 

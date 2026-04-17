@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: dim_vendors
+    description: "dimentional table about details per cab service Vendor"
+    columns:
+      - name: vendor_id
+        description: "A unique ID for each vendor"
+      - name: vendor_name
+        description: "the name of a vendor"

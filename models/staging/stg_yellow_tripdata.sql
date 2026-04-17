@@ -1,9 +1,9 @@
 select
     -- identifiers
-    cast(vendorid AS INT) as vendor_id,
-    cast(ratecodeid AS INT) as rate_code_id,
-    cast(pulocationid as INT) as pickup_location_id,
-    cast(dolocationid as INT) as dropoff_location_id,
+    cast(vendorid as int) as vendor_id,
+    cast(ratecodeid as int) as rate_code_id,
+    cast(pulocationid as int) as pickup_location_id,
+    cast(dolocationid as int) as dropoff_location_id,
 
     -- timestamps
     cast(tpep_pickup_datetime as timestamp) as pickup_datetime,
@@ -11,24 +11,24 @@ select
 
     -- trip info
     store_and_fwd_flag,
-    cast(passenger_count as INT) as passenger_count,
-    cast(trip_distance as NUMERIC) as trip_distance,
+    cast(passenger_count as int) as passenger_count,
+    cast(trip_distance as numeric) as trip_distance,
     -- yellow cab can only be street-hailed
-    1 AS trip_type,
+    1 as trip_type,
 
     -- payment info
-    CAST(fare_amount AS NUMERIC) AS fare_amount,
-    CAST(extra AS NUMERIC) AS extra,
-    CAST(mta_tax AS NUMERIC) AS mta_tax,
-    CAST(tip_amount AS NUMERIC) AS tip_amount,
-    cast(tolls_amount as NUMERIC) as tolls_amount,
+    cast(fare_amount as numeric) as fare_amount,
+    cast(extra as numeric) as extra,
+    cast(mta_tax as numeric) as mta_tax,
+    cast(tip_amount as numeric) as tip_amount,
+    cast(tolls_amount as numeric) as tolls_amount,
     0 as ehail_fee, -- green cab only thus 0 for yw
-    CAST(improvement_surcharge AS NUMERIC) AS improvement_surcharge,
-    CAST(total_amount AS NUMERIC) AS total_amount,
-    CAST(payment_type AS INT) AS payment_type,
-    cast(congestion_surcharge as NUMERIC) as congestion_surcharge,
+    cast(improvement_surcharge as numeric) as improvement_surcharge,
+    cast(total_amount as numeric) as total_amount,
+    cast(payment_type as int) as payment_type,
+    cast(congestion_surcharge as numeric) as congestion_surcharge,
 
-    'Yellow' AS taxi_type
+    'yellow' as taxi_type
 
 from {{ source("raw_data", "yellow_tripdata") }}
 
@@ -36,6 +36,6 @@ where vendorid is not null
 
 -- de-duplicate: if multiple trips match (same vendor, second, location, cab), keep first
 qualify row_number() over(
-    partition by vendorid, tpep_pickup_datetime, pulocationid, dolocationid
+    partition by vendorid, tpep_pickup_datetime, tpep_dropoff_datetime, pulocationid, dolocationid
     order by dropoff_datetime
 ) = 1
