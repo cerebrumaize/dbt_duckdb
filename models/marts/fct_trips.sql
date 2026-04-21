@@ -3,13 +3,13 @@
 -- find all the duplicates and fix them
 -- enrich payment_type
 
-/* check if there are duplicates
+/* CHECK IF there ARE duplicates
 -- below query returns 50, which means there are more than 50 rows that are duplicated.
-select *, count(*)
-from {{ ref("int_trips_unioned") }}
-group by all
-having count(*) > 1
-limit 50
+SELECT *, COUNT(*)
+FROM {{ ref("int_trips_unioned") }}
+GROUP BY ALL
+HAVING COUNT(*) > 1
+LIMIT 50
 */
 -- select count(1) from {{ ref("int_trips") }} -- 114,562,355
 -- select count(1) from (select distinct * from {{ ref("int_trips_unioned") }} ) -- 114,827,122
@@ -19,18 +19,17 @@ limit 50
     config(
         materialized='incremental',
         unique_key='trip_id',
-        incremental_strategy='merge',
         on_schema_change='append_new_columns'
     )
 }}
-with 
+WITH
 {% if is_incremental() %}
-latest_pickup_ts as (
-    select max(pickup_datetime) as max_ts from {{ this }}
+latest_pickup_ts AS (
+    SELECT MAX(pickup_datetime) AS max_ts FROM {{ this }}
 ),
 {% endif %}
-processed_trips as (
-    select
+processed_trips AS (
+    SELECT
         -- trip identifiers
         tp.trip_id,
         tp.vendor_id,
@@ -39,11 +38,11 @@ processed_trips as (
 
         -- location info
         tp.pickup_location_id,
-        pz.borough as pickup_borough,
-        pz.zone as pickup_zone,
+        pz.borough AS pickup_borough,
+        pz.zone AS pickup_zone,
         tp.dropoff_location_id,
-        dz.borough as dropoff_borough,
-        dz.zone as dropoff_zone,
+        dz.borough AS dropoff_borough,
+        dz.zone AS dropoff_zone,
 
         -- trip time
         tp.pickup_datetime,
@@ -68,14 +67,14 @@ processed_trips as (
         tp.payment_type,
         tp.payment_type_description
 
-    from {{ ref('int_trips') }} as tp
-    left join {{ ref('dim_locations') }} as pz on tp.pickup_location_id = pz.location_id
-    left join {{ ref('dim_locations') }} as dz on tp.dropoff_location_id = dz.location_id
+    FROM {{ ref('int_trips') }} AS tp
+    LEFT JOIN {{ ref('dim_locations') }} AS pz ON tp.pickup_location_id = pz.location_id
+    LEFT JOIN {{ ref('dim_locations') }} AS dz ON tp.dropoff_location_id = dz.location_id
 
     {% if is_incremental() %}
-    cross join latest_pickup_ts as lpts
+    CROSS JOIN latest_pickup_ts AS lpts
     -- only process new trips based on pickup datetime
-    where tp.pickup_datetime > lpts.max_ts
+    WHERE tp.pickup_datetime > lpts.max_ts
     {% endif %}
 )
-select * from processed_trips
+SELECT * FROM processed_trips

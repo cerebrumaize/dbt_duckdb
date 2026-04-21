@@ -6,5 +6,27 @@ models:
     columns:
       - name: vendor_id
         description: "A unique ID for each vendor"
+        data_tests:
+          - unique
+          - not_null
       - name: vendor_name
         description: "the name of a vendor"
+        data_tests:
+          - not_null
+
+  - name: fct_trips
+    description: "the fact table of NYC taxi trips."
+    columns:
+      - name: trip_id
+        data_tests:
+          - unique
+          - not_null
+      - name: vendor_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_vendors')
+                field: vendor_id
+          - accepted_values:
+              arguments:
+                values: ["1", "2", "6", "7"]

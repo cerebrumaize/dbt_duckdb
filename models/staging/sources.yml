@@ -3,24 +3,47 @@ version: 2
 sources:
   - name: raw_data
     description: "Raw data sources for NYC taxi rides"
-    database: taxi_rides_ny # project name in dbt_project.yml if local duckdb else project ID if using Google bigquery
     schema: prod
     tables:
       - name: yellow_tripdata
+
+        config:
+          external_location: 'data/yellow/*.parquet'
+
+        freshness: # make this a little more generous
+          warn_after: {count: 6, period: hour}
+          error_after: {count: 365, period: day}
+        loaded_at_field: tpep_pickup_datetime
+
         description: cab can be street hailed and pre-arranged anywhere in NYC.
-        colmns:
+
+        columns:
           - name: VendorID
-            description: |
-              which taxi company this one is working on
-                1: 'Creative Mobile Technologies'
-                2: 'VeriFone Inc.'
-                4: 'Unknown/Other'
+            tests:
+              - not_null
+            description: which taxi company this one is working on
             data_type: int
             meta:
               pii: false
               ownership: data_team
               importance: high
               formatting: 10-digits
+
       - name: green_tripdata
+        freshness: # make this a little more generous
+          warn_after: {count: 6, period: hour}
+          error_after: {count: 365, period: day}
+        loaded_at_field: lpep_pickup_datetime
 
+        config:
+          external_location: 'data/green/*.parquet'
 
+      - name: dim_vendors
+        config:
+          contract:
+            enforced: true
+        columns:
+          - name: vendor_id
+            data_type: integer
+            constraints:
+              - type: not_null

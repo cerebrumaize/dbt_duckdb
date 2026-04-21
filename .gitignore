@@ -8,3 +8,4 @@ logs/
 data/
 taxi_rides_ny.duckdb
 seeds/
+taxi_rides_ny.duckdb.tmp/

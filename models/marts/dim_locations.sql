@@ -1,14 +1,14 @@
-with taxi_zone_lookup as (
-    select * from {{ ref('taxi_zone_lookup') }}
+WITH taxi_zone_lookup AS (
+    SELECT * FROM {{ ref('taxi_zone_lookup') }}
 ),
 
-renamed as (
-    select
-        locationid as location_id,
+renamed AS (
+    SELECT
+        locationid AS location_id,
         borough,
         zone,
         service_zone
-    from taxi_zone_lookup
+    FROM taxi_zone_lookup
 )
 
-select * from renamed
+SELECT * FROM renamed

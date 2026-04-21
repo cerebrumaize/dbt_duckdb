@@ -1,12 +1,12 @@
-with unioned_trips as (
-    select * from {{ ref('int_trips_unioned') }}
+WITH unioned_trips AS (
+    SELECT * FROM {{ ref('int_trips_unioned') }}
 ),
 
-vendors as (
-    select
-        distinct vendor_id,
-        {{ get_vendor_names('vendor_id') }} as vendor_name
-    from unioned_trips
+vendors AS (
+    SELECT
+        DISTINCT vendor_id,
+        {{ get_vendor_names('vendor_id') }} AS vendor_name
+    FROM unioned_trips
 )
 
-select * from vendors
+SELECT * FROM vendors
