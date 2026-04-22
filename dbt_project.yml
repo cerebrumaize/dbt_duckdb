@@ -33,4 +33,11 @@ models:
   taxi_rides_ny:
     staging:
       +materialized: view
-      +enabled: true
+
+    intermediate:
+      +materialized: view        # ephemeral is also good here
+
+    marts:
+      +materialized: table
+      reporting:
+        +materialized: view      # or table depending on query cost
