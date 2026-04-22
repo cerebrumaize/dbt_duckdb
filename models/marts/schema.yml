@@ -25,22 +25,38 @@ models:
     columns:
       - name: vendor_id
         data_type: integer
-        description: ""
+        description: "A unique ID for each vendor"
+        data_tests:
+          - unique
+          - not_null
 
       - name: vendor_name
         data_type: varchar
-        description: ""
+        description: "the name of a vendor"
+        data_tests:
+          - not_null
 
   - name: fct_trips
-    description: ""
+    description: "the fact table of NYC taxi trips."
     columns:
       - name: trip_id
-        data_type: varchar
+        data_type: md5 varchar
         description: ""
+        data_tests:
+          - unique
+          - not_null
 
       - name: vendor_id
         data_type: integer
         description: ""
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_vendors')
+                field: vendor_id
+          - accepted_values:
+              arguments:
+                values: [1, 2, 6, 7]
 
       - name: taxi_type
         data_type: varchar
@@ -105,6 +121,8 @@ models:
       - name: fare_amount
         data_type: decimal(18,3)
         description: ""
+        data_tests:
+          - not_null
 
       - name: extra
         data_type: decimal(18,3)
@@ -145,6 +163,42 @@ models:
   - name: monthly_day_type_avg
     description: ""
     columns:
+      - name: vendor_name
+        data_type: varchar
+        description: ""
+
+      - name: taxi_type
+        data_type: varchar
+        description: ""
+
+      - name: pickup_month
+        data_type: date
+        description: ""
+
+      - name: avg_monthly_weekend_fare
+        data_type: double
+        description: ""
+
+      - name: avg_monthly_workday_fare
+        data_type: double
+        description: ""
+
+      - name: avg_monthly_weekend_total
+        data_type: double
+        description: ""
+
+      - name: avg_monthly_workday_total
+        data_type: double
+        description: ""
+
+      - name: avg_monthly_weekend_fare_ratio
+        data_type: double
+        description: ""
+
+      - name: avg_monthly_workday_fare_ratio
+        data_type: double
+        description: ""
+        
   - name: monthly_revenue_per_location
     description: ""
     columns:
