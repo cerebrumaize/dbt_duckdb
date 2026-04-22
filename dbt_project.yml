@@ -35,9 +35,9 @@ models:
       +materialized: view
 
     intermediate:
-      +materialized: view        # ephemeral is also good here
+      +materialized: view
 
     marts:
       +materialized: table
       reporting:
-        +materialized: view      # or table depending on query cost
+        +materialized: view
