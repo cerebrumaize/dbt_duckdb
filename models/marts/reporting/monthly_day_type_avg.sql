@@ -7,8 +7,7 @@ month_added AS (
         pickup_date,
         pickup_day_is_weekend,
         avg_daily_fare,
-        avg_daily_total,
-        avg_daily_fare_ratio
+        avg_daily_total
     FROM {{ ref('int_daily_avg_fare') }}
 )
 SELECT
@@ -22,11 +21,9 @@ SELECT
     AVG(CASE WHEN NOT pickup_day_is_weekend THEN avg_daily_fare ELSE 0 END) avg_monthly_workday_fare,
     AVG(CASE WHEN pickup_day_is_weekend THEN avg_daily_total ELSE 0 END) avg_monthly_weekend_total,
     AVG(CASE WHEN NOT pickup_day_is_weekend THEN avg_daily_total ELSE 0 END) avg_monthly_workday_total,
-    AVG(CASE WHEN pickup_day_is_weekend THEN avg_daily_fare_ratio ELSE 0 END) avg_monthly_weekend_fare_ratio,
-    AVG(CASE WHEN NOT pickup_day_is_weekend THEN avg_daily_fare_ratio ELSE 0 END) avg_monthly_workday_fare_ratio
+    AVG(CASE WHEN pickup_day_is_weekend THEN avg_daily_total ELSE 0 END) avg_monthly_weekend_fare_ratio,
+    AVG(CASE WHEN NOT pickup_day_is_weekend THEN avg_daily_total ELSE 0 END) avg_monthly_workday_fare_ratio
 
 FROM month_added
-
-WHERE vendor_name = 'Helix'
 
 GROUP BY vendor_name, taxi_type, pickup_month

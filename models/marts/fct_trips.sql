@@ -67,9 +67,9 @@ processed_trips AS (
         tp.payment_type,
         tp.payment_type_description
 
-    FROM {{ ref('int_trips') }} AS tp
-    LEFT JOIN {{ ref('dim_locations') }} AS pz ON tp.pickup_location_id = pz.location_id
-    LEFT JOIN {{ ref('dim_locations') }} AS dz ON tp.dropoff_location_id = dz.location_id
+    FROM {{ ref("int_trips") }} AS tp
+    LEFT JOIN {{ ref("dim_locations") }} AS pz ON tp.pickup_location_id = pz.location_id
+    LEFT JOIN {{ ref("dim_locations") }} AS dz ON tp.dropoff_location_id = dz.location_id
 
     {% if is_incremental() %}
     CROSS JOIN latest_pickup_ts AS lpts

@@ -8,7 +8,7 @@ select
     {% if target.type == 'bigquery' %}cast(date_trunc(pickup_datetime, month) as date)
     {% elif target.type == 'duckdb' %}date_trunc('month', pickup_datetime)
     {% endif %} as revenue_month,
-    service_type,
+    taxi_type,
 
     -- Revenue breakdown (summed by zone, month, and service type)
     sum(fare_amount) as revenue_monthly_fare,
@@ -27,4 +27,4 @@ select
 
 from {{ ref('fct_trips') }}
 
-group by pickup_zone, revenue_month, service_type
+group by pickup_zone, revenue_month, taxi_type
